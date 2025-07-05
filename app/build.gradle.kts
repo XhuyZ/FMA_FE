@@ -5,6 +5,7 @@ plugins {
 android {
     namespace = "com.example.fma_fe"
     compileSdk = 35
+    buildToolsVersion = "35.0.1"
 
     defaultConfig {
         applicationId = "com.example.fma_fe"
@@ -33,6 +34,8 @@ android {
 
 dependencies {
 
+
+    implementation("com.squareup.retrofit2:retrofit:3.1.0-SNAPSHOT")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
