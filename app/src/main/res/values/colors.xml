@@ -5,4 +5,5 @@
     <color name="text_secondary">#666666</color>
     <color name="text_primary">#333333</color>
     <color name="background_light">#f8f9fa</color>
+    <color name="signinbtn">#375c5e</color>
 </resources>
