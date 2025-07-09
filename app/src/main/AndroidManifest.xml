@@ -25,7 +25,6 @@
         <activity
             android:name=".activities.WelcomeActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.SignInActivity"
