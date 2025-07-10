@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_post"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header with Status and Time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:paddingBottom="8dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_looking_for"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Looking for Opponent"
+                android:textSize="12sp"
+                app:chipBackgroundColor="@color/primary_green"
+                app:chipMinHeight="28dp"
+                android:textColor="@color/background_light" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_status"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open"
+                android:textSize="12sp"
+                app:chipMinHeight="28dp"
+                android:textColor="@color/background_light" />
+
+        </LinearLayout>
+
+        <!-- Image -->
+        <ImageView
+            android:id="@+id/img_post"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Post image" />
+
+        <!-- Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/txt_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chúng tôi tìm đối thủ vào tối thứ 7"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_green"
+                android:layout_marginBottom="8dp"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Match Time -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_schedule"
+                    android:layout_marginEnd="8dp"
+                    app:tint="@color/primary_green" />
+
+                <TextView
+                    android:id="@+id/txt_match_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="July 3, 2025 at 6:00 PM"
+                    android:textSize="14sp"
+                    android:textColor="@color/primary_green" />
+
+            </LinearLayout>
+
+            <!-- Location/Pitch Info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_location"
+                    android:layout_marginEnd="8dp"
+                    app:tint="@color/primary_green" />
+
+                <TextView
+                    android:id="@+id/txt_pitch_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pitch #55"
+                    android:textSize="14sp"
+                    android:textColor="@color/primary_green" />
+
+            </LinearLayout>
+
+            <!-- Footer with Post Date and Action -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/txt_created_at"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Posted 2 days ago"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray" />
+
+                <ImageView
+                    android:id="@+id/btn_expand"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_expand_more"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    app:tint="@color/primary_green"
+                    android:contentDescription="View details" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

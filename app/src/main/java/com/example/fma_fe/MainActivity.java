@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        replaceFragment(new MatchFragment());
+        replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

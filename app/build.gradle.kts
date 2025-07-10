@@ -5,7 +5,7 @@ plugins {
 android {
     namespace = "com.example.fma_fe"
     compileSdk = 35
-    buildToolsVersion = "35.0.1"
+//    buildToolsVersion = "35.0.1"
 
     defaultConfig {
         applicationId = "com.example.fma_fe"
