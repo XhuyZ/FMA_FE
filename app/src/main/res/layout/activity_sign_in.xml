@@ -142,7 +142,7 @@
         android:fontFamily="sans-serif-medium"
         android:padding="8dp"
         android:text="Sign Up"
-        android:textColor="@color/primary_green"
+        android:textColor="@color/text_secondary"
         android:textSize="14sp"
         android:textStyle="bold" />
 

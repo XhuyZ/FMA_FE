@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primary_green"/>
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+
+    <!-- Soccer ball icon -->
+    <item android:gravity="center">
+        <vector android:height="80dp" android:tint="#375e3f"
+            android:viewportHeight="24" android:viewportWidth="24"
+            android:width="80dp">
+            <path android:fillColor="@android:color/white" android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM13,4.07c3.61,0.45 6.48,3.33 6.93,6.93L16,9.64L13,8.13V4.07zM8,5.08c1.18,-0.69 2.54,-1.08 4,-1.08V8.13L9,9.64L5.07,11C5.52,8.41 6.67,6.16 8,5.08zM5.07,13L9,14.36L12,15.87V20c-1.46,0 -2.82,-0.39 -4,-1.08C6.67,17.84 5.52,15.59 5.07,13zM13,20V15.87L16,14.36L18.93,13C18.48,15.59 17.33,17.84 16,18.92C14.82,19.61 13.46,20 13,20z"/>
+        </vector>
+    </item>
+</layer-list>
