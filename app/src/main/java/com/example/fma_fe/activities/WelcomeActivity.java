@@ -55,34 +55,34 @@ public class WelcomeActivity extends AppCompatActivity {
     private void setupSlides() {
         slides = new ArrayList<>();
         
-        // Using simple Android system icons as fallback
+
         slides.add(new WelcomeSlide(
-            android.R.drawable.ic_menu_myplaces, // Using system icon as fallback
+            R.drawable.slide1,
             "Connect with Teams",
             "Find and connect with football teams in your area. Build your network and expand your football community."
         ));
         
         slides.add(new WelcomeSlide(
-            android.R.drawable.ic_menu_recent_history,
+                R.drawable.slide2,
             "Schedule Matches",
             "Easily organize and schedule football matches. Send challenges to other teams and accept match invitations."
         ));
         
         slides.add(new WelcomeSlide(
-            android.R.drawable.ic_menu_mapmode,
-            "Book Football Pitches",
+                R.drawable.slide3,
+                "Book Football Pitches",
             "Reserve the perfect football pitch for your matches. Browse available venues and book with just a few taps."
         ));
         
         slides.add(new WelcomeSlide(
-            android.R.drawable.ic_menu_edit,
-            "Post Match Requests",
+                R.drawable.slide4,
+                "Post Match Requests",
             "Looking for opponents? Post your match requests and let other teams find you. Specify your preferences and requirements."
         ));
         
         slides.add(new WelcomeSlide(
-            android.R.drawable.ic_menu_preferences,
-            "Join the Community",
+                R.drawable.slide5,
+                "Join the Community",
             "Become part of the largest football community. Share experiences, make friends, and elevate your game."
         ));
     }
