@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "882363052091",
+    "project_id": "fma-be",
+    "storage_bucket": "fma-be.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882363052091:android:ad570d8a6dfc5a43956c1e",
+        "android_client_info": {
+          "package_name": "com.example.fma_fe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASJXE1gew8PJTFYyHlSBoIgsy2Pn35z7w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

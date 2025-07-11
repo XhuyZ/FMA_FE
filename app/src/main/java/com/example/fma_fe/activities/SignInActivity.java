@@ -2,21 +2,32 @@ package com.example.fma_fe.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fma_fe.MainActivity;
 import com.example.fma_fe.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.regex.Pattern;
 
 public class SignInActivity extends AppCompatActivity {
-
+    private FirebaseAuth auth;
     private TextInputEditText editTextUsername, editTextPassword;
     private TextInputLayout textInputLayoutUsername, textInputLayoutPassword;
     private MaterialButton buttonSignIn;
@@ -27,12 +38,55 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        auth = FirebaseAuth.getInstance();
+        editTextUsername = findViewById(R.id.editTextUsername);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        btnToSignup = findViewById(R.id.btnToSignup);
+        buttonSignIn = findViewById(R.id.buttonSignIn);
+        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = editTextUsername.getText().toString().trim();
+                String pass = editTextPassword.getText().toString().trim();
+                if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    if (!pass.isEmpty()) {
+                        auth.signInWithEmailAndPassword(email, pass)
+                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        Toast.makeText(SignInActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                                        finish();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(SignInActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        editTextPassword.setError("Empty fields are not allowed");
+                    }
+                } else if (email.isEmpty()) {
+                    editTextUsername.setError("Empty fields are not allowed");
+                } else {
+                    editTextUsername.setError("Please enter correct email");
+                }
+            }
+        });
+        btnToSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignInActivity.this,SignUpActivity.class));
+            }
+        });
 
-        // Initialize views
-        initViews();
 
-        // Set click listeners
-        setClickListeners();
+//        // Initialize views
+//        initViews();
+//
+//        // Set click listeners
+//        setClickListeners();
     }
 
     private void initViews() {
