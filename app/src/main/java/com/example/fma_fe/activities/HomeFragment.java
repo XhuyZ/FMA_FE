@@ -1,6 +1,7 @@
 package com.example.fma_fe.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,11 @@ import com.example.fma_fe.R;
 import com.example.fma_fe.adapters.PostAdapter;
 import com.example.fma_fe.models.Post;
 import com.example.fma_fe.dialogs.PostDetailDialog;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,40 +193,35 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
     }
 
     private void loadSampleData() {
-        // Sample data - replace with actual API call
-        allPosts.clear();
+        DatabaseReference postsRef = FirebaseDatabase.getInstance("https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("matchposts");
 
-        Post post1 = new Post();
-        post1.setPostId(1);
-        post1.setTeamId(1);
-        post1.setPostedByPlayerId(1);
-        post1.setPitchId(55);
-        post1.setReceivingTeamId(null);
-        post1.setMatchTime("2025-07-03T18:00:00Z");
-        post1.setDescription("Chúng tôi tìm đối thủ vào tối thứ 7");
-        post1.setLookingFor("Opponent");
-        post1.setPostStatus("Open");
-        post1.setImageUrl("https://i.pinimg.com/736x/d4/a0/39/d4a039be5eea48c290126e548236ef64.jpg");
-        post1.setCreatedAt("2025-06-29T10:00:00Z");
-        post1.setUpdatedAt("2025-07-01T15:30:00Z");
 
-        Post post2 = new Post();
-        post2.setPostId(2);
-        post2.setTeamId(102);
-        post2.setPostedByPlayerId(1002);
-        post2.setPitchId(56);
-        post2.setReceivingTeamId(103);
-        post2.setMatchTime("2025-07-05T20:00:00Z");
-        post2.setDescription("Cần thêm đồng đội cho trận đấu 7 người");
-        post2.setLookingFor("Teammate");
-        post2.setPostStatus("Open");
-        post2.setImageUrl("https://i.pinimg.com/736x/92/ee/dd/92eeddbe026c3c0451a1f74f8a1af63e.jpg");
-        post2.setCreatedAt("2025-06-30T09:45:00Z");
-        post2.setUpdatedAt("2025-07-01T15:30:00Z");
+        postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                allPosts.clear();
+                Log.d("FirebaseDebug", "Tổng số post: " + snapshot.getChildrenCount());
 
-        allPosts.add(post1);
-        allPosts.add(post2);
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Post post = postSnapshot.getValue(Post.class);
+                    if (post != null) {
+                        Log.d("FirebaseDebug", "Tải post thành công: " + post.getDescription());
+                        allPosts.add(post);
+                    } else {
+                        Log.w("FirebaseDebug", "Không map được post: " + postSnapshot.getKey());
+                    }
+                }
 
-        filterPosts();
+                filterPosts();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Lỗi: " + error.getMessage());
+            }
+        });
     }
+
+
 }
