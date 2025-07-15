@@ -99,7 +99,7 @@
         <!-- Posts RecyclerView -->
 
         <!-- Empty State -->
-        <androidx.recyclerview.widget.RecyclerView
+        <com.example.fma_fe.ExpandedRecyclerView
             android:id="@+id/recycler_posts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
