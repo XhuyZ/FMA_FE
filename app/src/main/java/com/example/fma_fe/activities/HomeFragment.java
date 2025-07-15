@@ -54,13 +54,28 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
 
     @Override
     public void onPostClick(Post post) {
-        // Xử lý khi user click vào 1 post ở RecyclerView
-        // Ví dụ mở PostDetailDialog hoặc chuyển sang PostDetailActivity
-        Toast.makeText(getContext(), "Clicked post ID: " + post.getPostId(), Toast.LENGTH_SHORT).show();
+        PostDetailDialog dialog = new PostDetailDialog(requireContext(), post);
+        dialog.setOnActionClickListener(new PostDetailDialog.OnActionClickListener() {
+            @Override
+            public void onContactClick(Post post) {
+                Toast.makeText(getContext(), "Contacting team for post: " + post.getPostId(), Toast.LENGTH_SHORT).show();
+                // TODO: mở màn hình chat hoặc gửi yêu cầu
+            }
+
+            @Override
+            public void onCloseClick() {
+                // Optional: Bạn có thể log hoặc xử lý nếu cần
+                Toast.makeText(getContext(), "Dialog closed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show(); // Hiển thị dialog
     }
+
 
     @Override
     public void onExpandClick(Post post) {
+
         // Xử lý khi user click vào nút expand
         // Ví dụ: mở dialog với thông tin chi tiết hoặc expand/collapse nội dung
         Toast.makeText(getContext(), "Expand clicked for post ID: " + post.getPostId(), Toast.LENGTH_SHORT).show();
