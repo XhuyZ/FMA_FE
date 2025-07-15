@@ -108,7 +108,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             txtMatchTime.setText(formattedTime);
 
             // Set pitch info
-            txtPitchInfo.setText("Pitch #" + post.getPitchId());
+            txtPitchInfo.setText(post.getPitchName());
 
             // Set created at with relative time
             String relativeTime = getRelativeTime(post.getCreatedAt());

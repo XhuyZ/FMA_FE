@@ -208,9 +208,9 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
     }
 
     private void loadSampleData() {
-        DatabaseReference postsRef = FirebaseDatabase.getInstance("https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app")
+        DatabaseReference postsRef = FirebaseDatabase
+                .getInstance("https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app")
                 .getReference("matchposts");
-
 
         postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -218,17 +218,61 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
                 allPosts.clear();
                 Log.d("FirebaseDebug", "Tổng số post: " + snapshot.getChildrenCount());
 
+                long totalPosts = snapshot.getChildrenCount();
+                final long[] loadedPosts = {0};
+
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Post post = postSnapshot.getValue(Post.class);
                     if (post != null) {
-                        Log.d("FirebaseDebug", "Tải post thành công: " + post.getDescription());
-                        allPosts.add(post);
+                        String pitchKey = post.getPitchId();  // 👉 vì pitchId đã là "pitch_1", "pitch_2"
+                        Log.d("PitchDebug", "Đang lấy pitch với key: " + pitchKey);
+
+                        DatabaseReference pitchRef = FirebaseDatabase
+                                .getInstance("https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app")
+                                .getReference("pitches")
+                                .child(pitchKey);
+
+                        pitchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot pitchSnapshot) {
+                                if (pitchSnapshot.exists()) {
+                                    String pitchName = pitchSnapshot.child("name").getValue(String.class);
+                                    post.setPitchName(pitchName != null ? pitchName : "Không rõ sân");
+                                } else {
+                                    post.setPitchName("Không rõ sân");
+                                }
+
+                                allPosts.add(post);
+                                Log.d("FirebaseDebug", "Post: " + post.getDescription() + ", Sân: " + post.getPitchName());
+
+                                loadedPosts[0]++;
+                                if (loadedPosts[0] == totalPosts) {
+                                    filterPosts();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e("FirebaseError", "Lỗi khi tải pitch: " + error.getMessage());
+                                loadedPosts[0]++;
+                                if (loadedPosts[0] == totalPosts) {
+                                    filterPosts();
+                                }
+                            }
+                        });
+
                     } else {
                         Log.w("FirebaseDebug", "Không map được post: " + postSnapshot.getKey());
+                        loadedPosts[0]++;
+                        if (loadedPosts[0] == totalPosts) {
+                            filterPosts();
+                        }
                     }
                 }
 
-                filterPosts();
+                if (totalPosts == 0) {
+                    filterPosts();
+                }
             }
 
             @Override
@@ -236,7 +280,9 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
                 Log.e("FirebaseError", "Lỗi: " + error.getMessage());
             }
         });
-    }
+
+}
+
 
 
 }

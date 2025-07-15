@@ -63,8 +63,6 @@ public class PostDetailDialog extends Dialog {
         TextView txtMatchTime = findViewById(R.id.txt_match_time_detail);
         TextView txtPitchInfo = findViewById(R.id.txt_pitch_info_detail);
         TextView txtCreatedAt = findViewById(R.id.txt_created_at_detail);
-        TextView txtTeamInfo = findViewById(R.id.txt_team_info);
-        TextView txtPlayerInfo = findViewById(R.id.txt_player_info);
         Chip chipLookingFor = findViewById(R.id.chip_looking_for_detail);
         Chip chipStatus = findViewById(R.id.chip_status_detail);
         MaterialButton btnContact = findViewById(R.id.btn_contact);
@@ -83,13 +81,7 @@ public class PostDetailDialog extends Dialog {
         String formattedTime = formatDateTime(post.getMatchTime());
         txtMatchTime.setText(formattedTime);
 
-        txtPitchInfo.setText("Pitch #" + post.getPitchId());
-
-//        String relativeTime = getRelativeTime(post.getCreatedAt());
-//        txtCreatedAt.setText("Posted " + relativeTime);
-
-        txtTeamInfo.setText("Team ID: " + post.getTeamId());
-        txtPlayerInfo.setText("Posted by Player ID: " + post.getPostedByPlayerId());
+        txtPitchInfo.setText(post.getPitchName());
 
         // Load image
         Glide.with(getContext())

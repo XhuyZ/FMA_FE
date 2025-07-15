@@ -4,7 +4,7 @@ public class Post {
     private int postId;
     private int teamId;
     private int postedByPlayerId;
-    private int pitchId;
+    private String pitchId;
     private Integer receivingTeamId;
     private String matchTime;
     private String description;
@@ -13,11 +13,15 @@ public class Post {
     private String imageUrl;
     private String createdAt;
     private String updatedAt;
+    private String pitchName;
+
+    public String getPitchName() { return pitchName; }
+    public void setPitchName(String pitchName) { this.pitchName = pitchName; }
 
     // Constructors
     public Post() {}
 
-    public Post(int postId, int teamId, int postedByPlayerId, int pitchId,
+    public Post(int postId, int teamId, int postedByPlayerId, String pitchId,
                 Integer receivingTeamId, String matchTime, String description,
                 String lookingFor, String postStatus, String imageUrl,
                 String createdAt, String updatedAt) {
@@ -45,8 +49,8 @@ public class Post {
     public int getPostedByPlayerId() { return postedByPlayerId; }
     public void setPostedByPlayerId(int postedByPlayerId) { this.postedByPlayerId = postedByPlayerId; }
 
-    public int getPitchId() { return pitchId; }
-    public void setPitchId(int pitchId) { this.pitchId = pitchId; }
+    public String getPitchId() { return pitchId; }
+    public void setPitchId(String pitchId) { this.pitchId = pitchId; }
 
     public Integer getReceivingTeamId() { return receivingTeamId; }
     public void setReceivingTeamId(Integer receivingTeamId) { this.receivingTeamId = receivingTeamId; }

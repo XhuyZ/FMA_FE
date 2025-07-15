@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "882363052091",
+    "firebase_url": "https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "fma-be",
     "storage_bucket": "fma-be.firebasestorage.app"
   },

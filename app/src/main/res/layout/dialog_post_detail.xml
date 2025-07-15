@@ -181,23 +181,7 @@
                     android:textColor="@color/primary_green"
                     android:layout_marginBottom="8dp" />
 
-                <TextView
-                    android:id="@+id/txt_team_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Team ID: 1"
-                    android:textSize="14sp"
-                    android:textColor="@color/lavender"
-                    android:layout_marginBottom="4dp" />
 
-                <TextView
-                    android:id="@+id/txt_player_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Posted by Player ID: 1"
-                    android:textSize="14sp"
-                    android:textColor="@color/lavender"
-                    android:layout_marginBottom="4dp" />
 
                 <TextView
                     android:id="@+id/txt_created_at_detail"
