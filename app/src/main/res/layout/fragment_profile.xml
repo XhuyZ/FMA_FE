@@ -85,25 +85,34 @@
                             android:id="@+id/tv_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="John Doe"
+                            android:text="Loading..."
                             android:textColor="@color/primary_green"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tv_user_role"
+                            android:id="@+id/tv_user_position"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Player"
+                            android:text="Loading..."
                             android:textColor="@android:color/darker_gray"
                             android:textSize="14sp"
                             android:layout_marginTop="4dp" />
 
                         <TextView
-                            android:id="@+id/tv_user_location"
+                            android:id="@+id/tv_user_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="📍 Ho Chi Minh City"
+                            android:text="Age: --"
+                            android:textColor="@android:color/darker_gray"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:id="@+id/tv_user_phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📞 Loading..."
                             android:textColor="@android:color/darker_gray"
                             android:textSize="12sp"
                             android:layout_marginTop="2dp" />
@@ -123,101 +132,91 @@
 
                 </RelativeLayout>
 
-                <!-- Stats Row -->
+                <!-- Bio Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bio"
+                        android:textColor="@color/primary_green"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tv_user_bio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.2" />
+
+                </LinearLayout>
+
+                <!-- Email Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginBottom="16dp">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:text="📧 "
+                        android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/tv_matches_played"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="24"
-                            android:textColor="@color/primary_green"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Matches"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="40dp"
-                        android:background="@android:color/darker_gray"
-                        android:alpha="0.3" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/tv_user_email"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/tv_rating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4.2"
-                            android:textColor="@color/primary_green"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Rating"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="40dp"
-                        android:background="@android:color/darker_gray"
-                        android:alpha="0.3" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/tv_teams_joined"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3"
-                            android:textColor="@color/primary_green"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Teams"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
+                        android:text="Loading..."
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <!-- Team Info Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚽ Team: "
+                        android:textColor="@color/primary_green"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_user_team"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading..."
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <!-- User ID (for debugging, can be removed in production) -->
+                <TextView
+                    android:id="@+id/tv_user_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID: Loading..."
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="10sp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -302,52 +301,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="My Teams"
-                        android:textColor="@color/primary_green"
-                        android:textSize="16sp"
-                        android:layout_marginStart="16dp"
-                        android:layout_gravity="center_vertical" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_arrow_right"
-                        android:tint="@android:color/darker_gray"
-                        android:layout_gravity="center_vertical" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Pitch Management (for pitch owners) -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_pitch_management"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:id="@+id/layout_pitch_management"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="?android:attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_stadium"
-                        android:tint="@color/primary_green"
-                        android:layout_gravity="center_vertical" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="My Pitches"
                         android:textColor="@color/primary_green"
                         android:textSize="16sp"
                         android:layout_marginStart="16dp"
