@@ -1,6 +1,7 @@
 package com.example.fma_fe.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,11 @@ import com.example.fma_fe.adapters.MatchAdapter;
 import com.example.fma_fe.models.Match;
 import com.example.fma_fe.ExpandedRecyclerView;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -87,20 +93,91 @@ public class MatchFragment extends Fragment implements MatchAdapter.OnItemClickL
   }
 
   private void loadSampleData() {
-    allMatches.clear();
-    // Tạo dữ liệu mẫu khớp với model Match.java gốc
-    allMatches.add(new Match(1, "pitch_1", getDateOffset(1), "Upcoming", "Team Chelsea"));
-    allMatches.add(new Match(2, "pitch_2", getDateOffset(-1), "Completed", "Team Arsenal"));
-    allMatches.add(new Match(3, "pitch_3", getDateOffset(2), "Upcoming", "Team Liverpool"));
-    allMatches.add(new Match(4, "pitch_4", getDateOffset(0), "Today", "Team Man City"));
-    allMatches.add(new Match(5, "pitch_5", getDateOffset(-2), "Completed", "Team MU"));
+    DatabaseReference appointmentRef = FirebaseDatabase
+            .getInstance("https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app")
+            .getReference("appointments");
 
-    // Mặc định chọn chip "All" và hiển thị
-    if (chipGroupFilter.getCheckedChipId() == -1) {
-      chipGroupFilter.check(R.id.chip_all_matches);
-    } else {
-      filterMatches();
-    }
+    allMatches.clear();
+
+    appointmentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot snapshot) {
+        long totalAppointments = snapshot.getChildrenCount();
+        final long[] loaded = {0};
+
+        for (DataSnapshot appointmentSnap : snapshot.getChildren()) {
+          int id = appointmentSnap.child("id").getValue(Integer.class);
+          String pitchId = appointmentSnap.child("pitchId").getValue(String.class);
+          String startTime = appointmentSnap.child("startTime").getValue(String.class);
+          String status = appointmentSnap.child("status").getValue(String.class);
+          String teamId = appointmentSnap.child("team_id").getValue(String.class);
+
+          // Tạo Match tạm thời, sẽ set pitchName & teamName sau
+          Match match = new Match(id, pitchId, startTime, status, "");
+
+          // Truy vấn pitch
+          DatabaseReference pitchRef = FirebaseDatabase.getInstance()
+                  .getReference("pitches").child(pitchId);
+
+          pitchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot pitchSnap) {
+              String pitchName = pitchSnap.child("name").getValue(String.class);
+              match.setPitchId(pitchName != null ? pitchName : "Không rõ sân");
+
+              // Truy vấn team
+              DatabaseReference teamRef = FirebaseDatabase.getInstance()
+                      .getReference("teams").child(teamId);
+
+              teamRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot teamSnap) {
+                  String teamName = teamSnap.child("name").getValue(String.class);
+                  match.setTeam_id(teamName != null ? teamName : "Không rõ đội");
+
+                  allMatches.add(match);
+                  loaded[0]++;
+                  if (loaded[0] == totalAppointments) {
+                    if (chipGroupFilter.getCheckedChipId() == -1) {
+                      chipGroupFilter.check(R.id.chip_all_matches);
+                    } else {
+                      filterMatches();
+                    }
+                  }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                  Log.e("FirebaseError", "Lỗi team: " + error.getMessage());
+                  loaded[0]++;
+                  if (loaded[0] == totalAppointments) {
+                    filterMatches();
+                  }
+                }
+              });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+              Log.e("FirebaseError", "Lỗi pitch: " + error.getMessage());
+              loaded[0]++;
+              if (loaded[0] == totalAppointments) {
+                filterMatches();
+              }
+            }
+          });
+        }
+
+        if (totalAppointments == 0) {
+          filterMatches();
+        }
+      }
+
+      @Override
+      public void onCancelled(@NonNull DatabaseError error) {
+        Log.e("FirebaseError", "Lỗi: " + error.getMessage());
+      }
+    });
   }
 
   private void filterMatches() {
