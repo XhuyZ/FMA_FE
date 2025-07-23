@@ -1,5 +1,6 @@
 package com.example.fma_fe;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,10 +11,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fma_fe.R;
 import com.example.fma_fe.activities.ContactFragment;
+import com.example.fma_fe.activities.CreatePostActivity;
 import com.example.fma_fe.activities.HomeFragment;
 import com.example.fma_fe.activities.MatchFragment;
 import com.example.fma_fe.activities.ProfileFragment;
 import com.example.fma_fe.databinding.ActivityMainBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         replaceFragment(new HomeFragment());
         binding.bottomNavigationView.setBackground(null);
+
+        // Setup bottom navigation
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -42,25 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
-        Log.d("huy","exit oncreate");
 
-//        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-//            switch (item.getItemId()) {
-//                case R.id.home:
-//                    replaceFragment(new HomeFragment());
-//                    break;
-//                case R.id.match:
-//                    replaceFragment(new MatchFragment());
-//                    break;
-//                case R.id.contact:
-//                    replaceFragment(new ContactFragment());
-//                    break;
-//                case R.id.profile:
-//                    replaceFragment(new ProfileFragment());
-//                    break;
-//            }
-//            return true;
-//        });
+        // Setup FAB click listener
+        FloatingActionButton fab = binding.fab;
+        fab.setOnClickListener(v -> {
+            Log.d("MainActivity", "FAB clicked - opening CreatePostActivity");
+            Intent intent = new Intent(MainActivity.this, CreatePostActivity.class);
+            startActivity(intent);
+        });
+
+        Log.d("huy","exit oncreate");
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -68,5 +64,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh the current fragment when returning from CreatePostActivity
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        if (currentFragment instanceof HomeFragment) {
+            // Refresh the home fragment to show new posts
+            replaceFragment(new HomeFragment());
+        }
     }
 }

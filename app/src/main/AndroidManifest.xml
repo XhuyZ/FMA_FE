@@ -33,6 +33,9 @@
             android:name=".activities.SignUpActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.CreatePostActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true" />
     </application>
