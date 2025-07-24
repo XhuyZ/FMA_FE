@@ -2,10 +2,14 @@ package com.example.fma_fe.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.button.MaterialButton;
@@ -14,6 +18,11 @@ import com.example.fma_fe.models.Post;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +33,7 @@ import java.util.TimeZone;
 public class PostDetailDialog extends Dialog {
     private Post post;
     private OnActionClickListener listener;
+    private TextView txtPitchInfo;
 
     public interface OnActionClickListener {
         void onContactClick(Post post);
@@ -61,7 +71,7 @@ public class PostDetailDialog extends Dialog {
         ImageView imgPost = findViewById(R.id.img_post_detail);
         TextView txtDescription = findViewById(R.id.txt_description_detail);
         TextView txtMatchTime = findViewById(R.id.txt_match_time_detail);
-        TextView txtPitchInfo = findViewById(R.id.txt_pitch_info_detail);
+        txtPitchInfo = findViewById(R.id.txt_pitch_info_detail);
         TextView txtCreatedAt = findViewById(R.id.txt_created_at_detail);
         Chip chipLookingFor = findViewById(R.id.chip_looking_for_detail);
         Chip chipStatus = findViewById(R.id.chip_status_detail);
@@ -107,11 +117,81 @@ public class PostDetailDialog extends Dialog {
             }
         });
 
+        // Add click listener for pitch info to open Google Maps
+        txtPitchInfo.setOnClickListener(v -> openGoogleMaps());
+
         // Enable button based on post status
         btnContact.setEnabled(post.getPostStatus().equals("Open"));
         if (!post.getPostStatus().equals("Open")) {
             btnContact.setText("Post is " + post.getPostStatus());
         }
+    }
+
+    private void openGoogleMaps() {
+        if (post.getPitchId() == null || post.getPitchId().isEmpty()) {
+            Toast.makeText(getContext(), "Pitch information not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show loading message
+        Toast.makeText(getContext(), "Loading location...", Toast.LENGTH_SHORT).show();
+
+        // Get pitch location from Firebase
+        DatabaseReference pitchRef = FirebaseDatabase
+                .getInstance("https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .getReference("pitches")
+                .child(post.getPitchId());
+
+        pitchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.child("location").exists()) {
+                    try {
+                        // Get latitude and longitude
+                        String latitude = snapshot.child("location").child("latitude").getValue(String.class);
+                        String longitude = snapshot.child("location").child("longitude").getValue(String.class);
+                        String pitchName = snapshot.child("name").getValue(String.class);
+
+                        if (latitude != null && longitude != null) {
+                            // Create Google Maps intent
+                            String uri = String.format(Locale.ENGLISH,
+                                    "geo:%s,%s?q=%s,%s(%s)",
+                                    latitude, longitude, latitude, longitude,
+                                    pitchName != null ? pitchName : "Football Pitch");
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            intent.setPackage("com.google.android.apps.maps");
+
+                            // Check if Google Maps is installed
+                            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                                getContext().startActivity(intent);
+                            } else {
+                                // Fallback to web browser if Google Maps is not installed
+                                String webUri = String.format(Locale.ENGLISH,
+                                        "https://www.google.com/maps?q=%s,%s(%s)",
+                                        latitude, longitude,
+                                        pitchName != null ? pitchName : "Football Pitch");
+                                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUri));
+                                getContext().startActivity(webIntent);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Location coordinates not available", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Log.e("PostDetailDialog", "Error parsing location data: " + e.getMessage());
+                        Toast.makeText(getContext(), "Error loading location", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Location not found for this pitch", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("PostDetailDialog", "Firebase error: " + error.getMessage());
+                Toast.makeText(getContext(), "Failed to load location", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private int getStatusColor(String status) {
