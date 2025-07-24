@@ -74,7 +74,6 @@ graph TD
 | Firebase Realtime DB | Lưu trữ dữ liệu thời gian thực     |
 | Firebase Auth        | Xác thực người dùng                |
 | Google Maps SDK      | Hiển thị bản đồ, tìm kiếm sân bóng |
-| Glide / Picasso      | Load ảnh nhanh và hiệu quả         |
 | RecyclerView         | Tối ưu danh sách hiển thị UI       |
 
 -------------------------------------------------------------
