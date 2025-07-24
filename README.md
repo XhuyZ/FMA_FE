@@ -69,8 +69,8 @@ graph TD
 
 | Công nghệ            | Mô tả                              |
 |----------------------|------------------------------------|
-| Android SDK          | Nền tảng phát triển chính          |
-| Kotlin / Java        | Ngôn ngữ lập trình                 |
+| Android Studio       | Nền tảng phát triển chính          |
+| Java                 | Ngôn ngữ lập trình                 |
 | Firebase Realtime DB | Lưu trữ dữ liệu thời gian thực     |
 | Firebase Auth        | Xác thực người dùng                |
 | Google Maps SDK      | Hiển thị bản đồ, tìm kiếm sân bóng |
