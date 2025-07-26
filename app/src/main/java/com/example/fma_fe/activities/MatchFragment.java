@@ -19,6 +19,8 @@ import com.example.fma_fe.adapters.MatchAdapter;
 import com.example.fma_fe.models.Match;
 import com.example.fma_fe.ExpandedRecyclerView;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +45,8 @@ public class MatchFragment extends Fragment implements MatchAdapter.OnItemClickL
 
   private final List<Match> allMatches = new ArrayList<>();
   private final List<Match> filteredMatches = new ArrayList<>();
+  private String currentUserId;
+
 
   public MatchFragment() {
     // Required empty constructor
@@ -51,17 +55,31 @@ public class MatchFragment extends Fragment implements MatchAdapter.OnItemClickL
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
+
+
+
     return inflater.inflate(R.layout.fragment_match, container, false);
   }
 
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    if (currentUser != null) {
+      currentUserId = currentUser.getUid();
+    } else {
+      Toast.makeText(getContext(), "Vui lòng đăng nhập lại!", Toast.LENGTH_SHORT).show();
+      return;
+    }
+
     initViews(view);
     setupRecyclerView();
     setupListeners();
     loadSampleData();
   }
+
+
 
   private void initViews(View view) {
     recyclerMatches = view.findViewById(R.id.recycler_matches);
@@ -106,60 +124,89 @@ public class MatchFragment extends Fragment implements MatchAdapter.OnItemClickL
         final long[] loaded = {0};
 
         for (DataSnapshot appointmentSnap : snapshot.getChildren()) {
-          int id = appointmentSnap.child("id").getValue(Integer.class);
+          Integer id = appointmentSnap.child("id").getValue(Integer.class);
           String pitchId = appointmentSnap.child("pitchId").getValue(String.class);
           String startTime = appointmentSnap.child("startTime").getValue(String.class);
           String status = appointmentSnap.child("status").getValue(String.class);
           String teamId = appointmentSnap.child("team_id").getValue(String.class);
 
-          // Tạo Match tạm thời, sẽ set pitchName & teamName sau
-          Match match = new Match(id, pitchId, startTime, status, "");
+          if (teamId == null || teamId.isEmpty()) {
+            loaded[0]++;
+            continue;
+          }
 
-          // Truy vấn pitch
-          DatabaseReference pitchRef = FirebaseDatabase.getInstance()
-                  .getReference("pitches").child(pitchId);
+          // Kiểm tra thành viên team
+          DatabaseReference teamMembersRef = FirebaseDatabase.getInstance()
+                  .getReference("teams").child(teamId).child("members");
 
-          pitchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+          teamMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot pitchSnap) {
-              String pitchName = pitchSnap.child("name").getValue(String.class);
-              match.setPitchId(pitchName != null ? pitchName : "Không rõ sân");
+            public void onDataChange(@NonNull DataSnapshot membersSnap) {
+              boolean isMember = false;
+              for (DataSnapshot mem : membersSnap.getChildren()) {
+                String uid = mem.getValue(String.class);
+                if (uid != null && uid.equals(currentUserId)) {
+                  isMember = true;
+                  break;
+                }
+              }
 
-              // Truy vấn team
-              DatabaseReference teamRef = FirebaseDatabase.getInstance()
-                      .getReference("teams").child(teamId);
+              if (isMember) {
+                Match match = new Match(id, pitchId, startTime, status, "");
 
-              teamRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot teamSnap) {
-                  String teamName = teamSnap.child("name").getValue(String.class);
-                  match.setTeam_id(teamName != null ? teamName : "Không rõ đội");
+                // Truy vấn pitch name
+                DatabaseReference pitchRef = FirebaseDatabase.getInstance()
+                        .getReference("pitches").child(pitchId);
+                pitchRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                  @Override
+                  public void onDataChange(@NonNull DataSnapshot pitchSnap) {
+                    String pitchName = pitchSnap.child("name").getValue(String.class);
+                    match.setPitchId(pitchName != null ? pitchName : "Không rõ sân");
 
-                  allMatches.add(match);
-                  loaded[0]++;
-                  if (loaded[0] == totalAppointments) {
-                    if (chipGroupFilter.getCheckedChipId() == -1) {
-                      chipGroupFilter.check(R.id.chip_all_matches);
-                    } else {
+                    // Truy vấn team name
+                    DatabaseReference teamRef = FirebaseDatabase.getInstance()
+                            .getReference("teams").child(teamId);
+                    teamRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                      @Override
+                      public void onDataChange(@NonNull DataSnapshot teamSnap) {
+                        String teamName = teamSnap.child("name").getValue(String.class);
+                        match.setTeam_id(teamName != null ? teamName : "Không rõ đội");
+
+                        allMatches.add(match);
+                        loaded[0]++;
+                        if (loaded[0] == totalAppointments) {
+                          filterMatches();
+                        }
+                      }
+
+                      @Override
+                      public void onCancelled(@NonNull DatabaseError error) {
+                        loaded[0]++;
+                        if (loaded[0] == totalAppointments) {
+                          filterMatches();
+                        }
+                      }
+                    });
+                  }
+
+                  @Override
+                  public void onCancelled(@NonNull DatabaseError error) {
+                    loaded[0]++;
+                    if (loaded[0] == totalAppointments) {
                       filterMatches();
                     }
                   }
+                });
+              } else {
+                loaded[0]++;
+                if (loaded[0] == totalAppointments) {
+                  filterMatches();
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                  Log.e("FirebaseError", "Lỗi team: " + error.getMessage());
-                  loaded[0]++;
-                  if (loaded[0] == totalAppointments) {
-                    filterMatches();
-                  }
-                }
-              });
+              }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-              Log.e("FirebaseError", "Lỗi pitch: " + error.getMessage());
               loaded[0]++;
               if (loaded[0] == totalAppointments) {
                 filterMatches();
@@ -179,6 +226,7 @@ public class MatchFragment extends Fragment implements MatchAdapter.OnItemClickL
       }
     });
   }
+
 
   private void filterMatches() {
     filteredMatches.clear();
