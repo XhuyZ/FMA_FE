@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Chat" />
+    <style name="Chat.Message" />
+    <style name="Chat.Text" />
+
+    <style name="Text" />
+    <style name="Text.Chat" />
+
+    <style name="Widget" />
+    <style name="Widget.Chat" />
+
+
+    <!-- Toolbar chung -->
+    <style name="Widget.Chat.Toolbar">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@drawable/toolbar_gradient</item>
+        <item name="android:elevation">4dp</item>
+        <!-- ConstraintLayout attrs -->
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
+    <!-- Title style cho Toolbar -->
+    <style name="Text.Chat.ToolbarTitle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!-- RecyclerView phong cách Chat -->
+    <style name="Widget.Chat.RecyclerView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@color/messages_background</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
+    <!-- Container nhập tin nhắn -->
+    <style name="Widget.Chat.InputContainer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/input_background</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- TextInputLayout kế thừa MaterialComponents -->
+    <style name="Widget.Chat.InputLayout"
+        parent="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxBackgroundMode">filled</item>
+        <item name="boxBackgroundColor">@color/edittext_background</item>
+        <item name="boxCornerRadiusTopStart">24dp</item>
+        <item name="boxCornerRadiusTopEnd">24dp</item>
+        <item name="boxCornerRadiusBottomStart">24dp</item>
+        <item name="boxCornerRadiusBottomEnd">24dp</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="hintTextColor">@color/hint_text_color</item>
+    </style>
+
+    <!-- TextInputEditText kế thừa MaterialComponents -->
+    <style name="Widget.Chat.EditText"
+        parent="@style/Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:imeOptions">actionSend</item>
+        <item name="android:inputType">textCapSentences|textMultiLine</item>
+        <item name="android:maxLines">4</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textColor">@color/message_text_color</item>
+        <item name="android:textColorHint">@color/hint_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- FloatingActionButton kế thừa MaterialComponents -->
+    <style name="Widget.Chat.Fab"
+        parent="@style/Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="backgroundTint">@color/send_button_color</item>
+        <item name="fabSize">normal</item>
+        <item name="tint">#FFFFFF</item>
+    </style>
+
+    <!-- Container ngoài chung cho item chat -->
+    <style name="Chat.Message.Container">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!-- Khung tin nhắn nhận -->
+    <style name="Chat.Message.Received">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">64dp</item>
+        <item name="android:background">@drawable/bg_received</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Khung tin nhắn gửi -->
+    <style name="Chat.Message.Sent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">64dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:background">@drawable/bg_sent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- TextView tên người gửi -->
+    <style name="Chat.Text.SenderName">
+        <item name="android:textColor">#2196F3</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- TextView nội dung tin nhắn -->
+    <style name="Chat.Text.Message">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- TextView thời gian -->
+    <style name="Chat.Text.Time">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
+
+</resources>

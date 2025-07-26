@@ -1,11 +1,17 @@
 package com.example.fma_fe.models;
 
+import com.google.firebase.database.Exclude;
+
 public class Match {
     private int id;
+
+    @Exclude
+    private String dbKey;  // field này để lưu key thật trên Firebase
     private String pitchId;
     private String startTime;
     private String status;
     private String team_id;
+    private String postId;
 
     // Constructor mặc định (bắt buộc cho Firebase)
     public Match() {
@@ -59,4 +65,10 @@ public class Match {
     public void setTeam_id(String team_id) {
         this.team_id = team_id;
     }
+
+    @Exclude
+    public String getDbKey() { return dbKey; }
+    public void setDbKey(String dbKey) { this.dbKey = dbKey; }
+    public String getPostId() { return postId; }
+    public void setPostId(String postId) { this.postId = postId; }
 }

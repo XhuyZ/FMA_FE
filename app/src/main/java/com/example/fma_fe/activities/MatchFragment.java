@@ -218,6 +218,7 @@ public class MatchFragment extends Fragment implements MatchAdapter.OnItemClickL
     }
   }
 
+
   // Hàm tạo chuỗi ngày tháng ISO 8601 để làm dữ liệu mẫu
   private String getDateOffset(int daysOffset) {
     long now = System.currentTimeMillis();

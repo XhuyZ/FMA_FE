@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fma_fe.models.Match;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.example.fma_fe.R;
 import com.example.fma_fe.adapters.PostAdapter;
 import com.example.fma_fe.models.Post;
@@ -26,9 +26,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import com.example.fma_fe.MainActivity;
+import com.example.fma_fe.models.Appointment;
 
 public class HomeFragment extends Fragment implements PostAdapter.OnPostClickListener {
 
@@ -58,32 +64,21 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
         dialog.setOnActionClickListener(new PostDetailDialog.OnActionClickListener() {
             @Override
             public void onContactClick(Post post) {
-                Toast.makeText(getContext(), "Contacting team for post: " + post.getPostId(), Toast.LENGTH_SHORT).show();
-                // TODO: mở màn hình chat hoặc gửi yêu cầu
+                createAppointmentForPost(post);
             }
 
             @Override
             public void onCloseClick() {
-                // Optional: Bạn có thể log hoặc xử lý nếu cần
                 Toast.makeText(getContext(), "Dialog closed", Toast.LENGTH_SHORT).show();
             }
         });
 
-        dialog.show(); // Hiển thị dialog
+        dialog.show();
     }
-
 
     @Override
     public void onExpandClick(Post post) {
-
-        // Xử lý khi user click vào nút expand
-        // Ví dụ: mở dialog với thông tin chi tiết hoặc expand/collapse nội dung
         Toast.makeText(getContext(), "Expand clicked for post ID: " + post.getPostId(), Toast.LENGTH_SHORT).show();
-
-        // Bạn có thể implement logic expand ở đây, ví dụ:
-        // - Mở PostDetailDialog
-        // - Expand/collapse description
-        // - Hiển thị thêm thông tin chi tiết
     }
 
     @Override
@@ -202,7 +197,6 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
     }
 
     private void refreshPosts() {
-        // TODO: Implement actual API call
         Toast.makeText(getContext(), "Refreshing posts...", Toast.LENGTH_SHORT).show();
         loadSampleData();
     }
@@ -224,7 +218,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Post post = postSnapshot.getValue(Post.class);
                     if (post != null) {
-                        String pitchKey = post.getPitchId();  // 👉 vì pitchId đã là "pitch_1", "pitch_2"
+                        String pitchKey = post.getPitchId();
                         Log.d("PitchDebug", "Đang lấy pitch với key: " + pitchKey);
 
                         DatabaseReference pitchRef = FirebaseDatabase
@@ -280,8 +274,93 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostClickLis
                 Log.e("FirebaseError", "Lỗi: " + error.getMessage());
             }
         });
+    }
 
-}
+    private void createAppointmentForPost(Post post) {
+        String dbUrl = "https://fma-be-default-rtdb.asia-southeast1.firebasedatabase.app";
+
+        DatabaseReference usersRef = FirebaseDatabase
+                .getInstance(dbUrl)
+                .getReference("users");
+
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String foundTeamId = null;
+
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    try {
+                        // Đọc userId dạng Integer
+                        Integer userId = userSnapshot.child("userId").getValue(Integer.class);
+
+                        // Đọc teamId có thể là Integer hoặc String "team_2"
+                        Object rawTeamId = userSnapshot.child("teamId").getValue();
+                        Integer teamId = null;
+
+                        if (rawTeamId instanceof Long) {
+                            teamId = ((Long) rawTeamId).intValue(); // nếu là số
+                        } else if (rawTeamId instanceof String) {
+                            String teamIdStr = (String) rawTeamId;
+                            if (teamIdStr.startsWith("team_")) {
+                                teamId = Integer.parseInt(teamIdStr.replace("team_", ""));
+                            } else {
+                                teamId = Integer.parseInt(teamIdStr);
+                            }
+                        }
+
+                        // Nếu userId trùng với người đăng bài
+                        if (userId != null && teamId != null && userId.equals(post.getPostedByPlayerId())) {
+                            foundTeamId = "team_" + teamId;
+                            break;
+                        }
+                    } catch (Exception e) {
+                        Log.e("Firebase", "Lỗi parse userId/teamId: " + e.getMessage());
+                    }
+                }
+
+                if (foundTeamId == null) {
+                    Toast.makeText(getContext(), "Không tìm thấy team của user đăng bài", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Gọi tiếp tạo appointment như cũ...
+                DatabaseReference appointmentsRef = FirebaseDatabase
+                        .getInstance(dbUrl)
+                        .getReference("appointments");
+
+                String newKey = "appointment_" + post.getPostId();
+                Match newMatch = new Match();
+
+                newMatch.setId(post.getPostId());
+                newMatch.setPitchId(post.getPitchId());
+                newMatch.setPostId("post_" + post.getPostId());
+                newMatch.setStartTime(post.getMatchTime());
+                newMatch.setStatus("Pending");
+                newMatch.setTeam_id(foundTeamId);
+
+                appointmentsRef.child(newKey).setValue(newMatch)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getContext(), "Match (Appointment) created!", Toast.LENGTH_SHORT).show();
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                if (getActivity() instanceof MainActivity) {
+                                    ((MainActivity) getActivity()).replaceFragment(new ContactFragment());
+                                }
+                            }, 300);
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Lỗi khi tạo appointment: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Lỗi đọc user: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
 
 
 

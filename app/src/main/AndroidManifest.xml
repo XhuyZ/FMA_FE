@@ -38,6 +38,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity android:name=".activities.ChatActivity" />
+
+        <activity android:name=".activities.RoomActivity" />
+
     </application>
 
 </manifest>

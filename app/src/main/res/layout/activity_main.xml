@@ -49,5 +49,21 @@
         app:maxImageSize="70dp"
         app:tint="@color/primary_green" />
 
+    <!-- icon chat, tự thay thế bằng tên đúng -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabChat"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/ic_chat"
+        android:contentDescription="Chat Hỗ Trợ"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/primary_green" />
+
+
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

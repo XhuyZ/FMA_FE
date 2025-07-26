@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.fma_fe.R;
+import com.example.fma_fe.activities.ChatActivity;
 import com.example.fma_fe.activities.ContactFragment;
 import com.example.fma_fe.activities.CreatePostActivity;
 import com.example.fma_fe.activities.HomeFragment;
@@ -56,10 +57,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // FAB chat hỗ trợ
+        FloatingActionButton fabChat = findViewById(R.id.fabChat);
+        fabChat.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            startActivity(intent);
+        });
+
         Log.d("huy","exit oncreate");
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout, fragment);
