@@ -14,16 +14,25 @@
 
 # Screenshots
 
-![Screen1](assets/Screen1.jpg)
-![Screen2](assets/Screen2.jpg)
-![Screen3](assets/Screen3.jpg)
-![Screen4](assets/Screen4.jpg)
-![Screen5](assets/Screen5.jpg)
-![Screen6](assets/Screen6.jpg)
-![Screen7](assets/Screen7.jpg)
-![Screen8](assets/Screen8.jpg)
-![Screen9](assets/Screen9.jpg)
-![Screen10](assets/Screen10.jpg)
+<p align="center">
+  <img src="assets/Screen1.jpg" width="250" />
+  <img src="assets/Screen2.jpg" width="250" />
+  <img src="assets/Screen3.jpg" width="250" />
+</p>
+<p align="center">
+  <img src="assets/Screen4.jpg" width="250" />
+  <img src="assets/Screen5.jpg" width="250" />
+  <img src="assets/Screen6.jpg" width="250" />
+</p>
+<p align="center">
+  <img src="assets/Screen7.jpg" width="250" />
+  <img src="assets/Screen8.jpg" width="250" />
+  <img src="assets/Screen9.jpg" width="250" />
+</p>
+<p align="center">
+  <img src="assets/Screen10.jpg" width="250" />
+</p>
+
 ---
 
 ## 🏁 Mục tiêu của ứng dụng
